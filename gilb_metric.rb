@@ -2,12 +2,12 @@ class GilbMetric
   @@cond_ops = %w|while until if unless case when else|
 
   def initialize(text)
-    @codeText = text.split(/\n/).select {|line| line != ''}
+    @code_text = text.split(/\n/).select {|line| line != ''}
   end
 
   def show
-    @op_count = @codeText.select {|line| !(/^(\bbegin\b)|(\bend\b)|(\bdef\b.*)$/ === line)}.length + 0.0
-    @CL = @codeText.select {|line| /^.*(\bif\b.*)|(\bunless\b.*)|(\bwhen\b.*)|(\bwhile\b.*)|(\buntil\b.*)$/ === line}.length
+    @op_count = @code_text.select {|line| !(/^(\bbegin\b)|(\bend\b)|(\bdef\b.*)$/ === line)}.length + 0.0
+    @CL = @code_text.select {|line| /^.*(\bif\b.*)|(\bunless\b.*)|(\bwhen\b.*)|(\bwhile\b.*)|(\buntil\b.*)$/ === line}.length
     puts "CL: #{@CL}", "cl: #{@op_count / @CL}", "CLI: #{deep_level - 1 >= 0 ? deep_level - 1 : 0}"
   end
 
@@ -22,7 +22,7 @@ class GilbMetric
     when_op = 0
     @max_deep = 0
     case_flag = false
-    @codeText.each do |line|
+    @code_text.each do |line|
       (
       when_op += 1 if /^.*\bwhen\b.*$/ === line && !case_flag
       op_stack.push line if !case_flag
